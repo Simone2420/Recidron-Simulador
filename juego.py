@@ -6,6 +6,8 @@ app = Ursina()
 
 # Configurar el jugador (primera persona)
 player = FirstPersonController()
+player.collider = 'box'
+player.gravity = 0.001
 player.position = (0, 10, 0)  # Posición inicial (x, y, z)
 
 # Crear el suelo
@@ -22,7 +24,7 @@ platform = Entity(
     color=color.orange,
     collider='box',
     position=(0, 2, 5),
-    scale=(5, 0.5, 5)
+    scale=(5, 1, 5)
 )
 
 # Crear un obstáculo
@@ -30,7 +32,7 @@ obstacle = Entity(
     model='sphere',
     color=color.red,
     collider='sphere',
-    position=(0, 5, 10),
+    position=(0, 5, 5),
     scale=2
 )
 
@@ -41,7 +43,7 @@ sky = Sky()
 def update():
     # Si el jugador toca el obstáculo, reiniciar posición
     if player.intersects(obstacle).hit:
-        player.position = (0, 10, 0)
-
+        print("¡Chocaste con el obstáculo!")
+        player.position = (0, 10, 0)  # Reiniciar posición del jugador
 # Ejecutar el juego
 app.run()
