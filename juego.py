@@ -26,7 +26,12 @@ platform = Entity(
     position=(0, 2, 5),
     scale=(5, 1, 5)
 )
-
+platform = Entity(
+    model='./modelos_graficos/yogurt.obj',
+    collider='box',
+    position=(0, 6, 6),
+    scale=(0.3, 0.3, 0.3)
+)
 # Crear un obstáculo
 obstacle = Entity(
     model='sphere',
