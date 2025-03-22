@@ -35,10 +35,9 @@ class TrashBag(EspecificTrash):
         super().__init__(model,collider,color,**kwargs)
 class BottlesFactory:
     pass
-
-# Configurar el jugador (primera persona)
-player = Dron()  # Usamos la clase Dron personalizada
-player.position = (0, 10, 0)  # Posición inicial (x, y, z)
+class TrashCan(Entity): pass
+player = Dron()  
+player.position = (0, 10, 0)
 
 # Crear el suelo
 ground = Entity(
@@ -60,21 +59,34 @@ platform = Entity(
 # Crear un obstáculo
 obstacle = Entity(
     model='./modelos_graficos/yogurt.obj',
-    color=color.red,
+    texture = "brick",
+    color=color.blue,
     collider='box',
     position=(0, 5, 5),
     scale=0.3
 )
-
+class Recolectable(Button):
+    def get_recolectable(self):
+        self.parent = camera
+        self.position = Vec3(.3,0,.3)
+        player.gun = self
+recolectable_bottle = Recolectable(parent=scene, 
+             model='./modelos_graficos/yogurt.obj', 
+             color=color.blue, 
+             origin_y=-.5, 
+             position=(3,0,3), 
+             collider='box', 
+             scale=(.2,.2,.2))    
+recolectable_bottle.on_click = recolectable_bottle.get_recolectable
 # Crear un cielo
 sky = Sky()
 
 # Función para detectar colisiones
-def update():
-    # Si el jugador toca el obstáculo, reiniciar posición
-    if player.intersects(obstacle).hit:
-        print("¡Chocaste con el obstáculo!")
-        player.position = (0, 10, 0)  # Reiniciar posición del jugador
+# def update():
+#     # Si el jugador toca el obstáculo, reiniciar posición
+#     if player.intersects(obstacle).hit:
+#         print("¡Chocaste con el obstáculo!")
+#         player.position = (0, 10, 0)  # Reiniciar posición del jugador
 
 # Ejecutar el juego
 app.run()
