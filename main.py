@@ -1,5 +1,6 @@
 from ursina import *
 from ursina.prefabs.first_person_controller import FirstPersonController
+import random
 
 # Inicializar la ventana
 simulation = Ursina()
@@ -10,7 +11,7 @@ class Dron(FirstPersonController):
         self.vertical_speed = 5  # Velocidad de movimiento vertical
         self.collider = 'box'
         self.gravity = 0.005
-        # self.scale = self.scale + Vec3(1, 1, 1)
+        self.gun = None
 
     def update(self):
         super().update()
@@ -28,50 +29,44 @@ class Dron(FirstPersonController):
             hit_info = raycast(
                 origin=self.position + (0, 1, 0),  # Ajustar origen para evitar el suelo
                 direction=self.forward,
-                distance=10,  # Distancia máxima de detección
+                distance=4,  # Distancia máxima de detección
                 ignore=(self,)  # Ignorar al propio jugador
             )
             if hit_info.hit:
                 # Colocar el objeto encima de la entidad detectada
                 target = hit_info.entity
                 self.gun.parent = scene
-                self.gun.position = target.position + (0, target.scale_y // 2 + self.gun.scale_y // 2, 0)
+                self.gun.position = target.position + Vec3(0, 8, 0)
+
+                # Aplicar gravedad a la botella
+                self.gun.velocity_y = 0  # Inicializar la velocidad vertical
+                self.gun.apply_gravity = True  # Indicador para aplicar gravedad
             else:
                 # Soltar el objeto normalmente
                 self.gun.parent = scene
-                self.gun.position = self.position + self.forward
-                # Agregar gravedad al objeto soltado
+                self.gun.position = camera.world_position + camera.forward * 4
+
+                # Aplicar gravedad al objeto soltado
                 self.gun.velocity_y = 0  # Inicializar la velocidad vertical
                 self.gun.apply_gravity = True  # Indicador para aplicar gravedad
+
             self.gun = None
-
-class GeneralEntity:
-    pass
-class EspecificTrash(Entity):
-    def __init__(self, model, collider, color, **kwargs):
-        self.model = model
-        self.collider = collider
-        self.color = color
-
-
-class Bottle(EspecificTrash):
-    def __init__(self, model, collider, color, **kwargs):
-        super().__init__(model, collider, color, **kwargs)
-
-
-class TrashBag(EspecificTrash):
-    def __init__(self, model, collider, color, **kwargs):
-        super().__init__(model, collider, color, **kwargs)
-
-
-class BottlesFactory:
-    pass
-
 
 class TrashCan(Entity):
     pass
 
+class Recolectable(Button):
+    global player
+    def __init__(self,**kwargs):
+        super().__init__(**kwargs)
+    def get_recolectable(self):
+        if player.gun is None:
+            self.parent = camera
+            self.position = Vec3(0, 0, 3)
+            player.gun = self
+            
 
+# Crear el jugador
 player = Dron()
 player.position = (0, 10, 0)
 
@@ -102,14 +97,7 @@ obstacle = Entity(
     scale=0.3
 )
 
-
-class Recolectable(Button):
-    def get_recolectable(self):
-        self.parent = camera
-        self.position = Vec3(.3, 0, .3)
-        player.gun = self
-
-
+# Crear recolectables
 recolectable_bottle = Recolectable(
     parent=scene,
     model='./modelos_graficos/yogurt.obj',
@@ -118,12 +106,24 @@ recolectable_bottle = Recolectable(
     position=(3, 0, 3),
     collider='box',
     scale=(.2, .2, .2)
+    
 )
+
+recolectable_bottle_2 = Recolectable(
+    parent=scene,
+    model='./modelos_graficos/yogurt.obj',
+    color=color.red,
+    origin_y=-.5,
+    position=(10, 0, 4),
+    collider='box',
+    scale=(.2, .2, .2)
+)
+
 recolectable_bottle.on_click = recolectable_bottle.get_recolectable
+recolectable_bottle_2.on_click = recolectable_bottle_2.get_recolectable
 
 # Crear un cielo
 sky = Sky()
-
 
 # Función para aplicar gravedad a los objetos soltados
 def apply_gravity():
@@ -138,10 +138,8 @@ def apply_gravity():
                 entity.velocity_y = 0
                 entity.apply_gravity = False
 
-
 # Ejecutar el juego
 def update():
     apply_gravity()
-
 
 simulation.run()
