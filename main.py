@@ -1,75 +1,20 @@
 from ursina import *
 from ursina.prefabs.first_person_controller import FirstPersonController
 import random
-
+from flyweight import *
+from recolectable import *
+from dron import *
 # Inicializar la ventana
 simulation = Ursina()
 
-class Dron(FirstPersonController):
-    def __init__(self, **kwargs):
-        super().__init__()
-        self.vertical_speed = 5  # Velocidad de movimiento vertical
-        self.collider = 'box'
-        self.gravity = 0.005
-        self.gun = None
-
-    def update(self):
-        super().update()
-        self.direction = Vec3(
-            self.forward * (held_keys['w'] - held_keys['s'])
-            + self.right * (held_keys['d'] - held_keys['a'])
-            + self.up * (held_keys['up arrow'] - held_keys['down arrow'])  # Movimiento vertical
-        ).normalized()
-        self.position += self.direction * self.speed * time.dt
-
-    def input(self, key):
-        super().input(key)
-        if key == 'q' and hasattr(self, 'gun') and self.gun:
-            # Realizar un raycast para detectar entidades frente al jugador
-            hit_info = raycast(
-                origin=self.position + (0, 1, 0),  # Ajustar origen para evitar el suelo
-                direction=self.forward,
-                distance=4,  # Distancia máxima de detección
-                ignore=(self,)  # Ignorar al propio jugador
-            )
-            if hit_info.hit:
-                # Colocar el objeto encima de la entidad detectada
-                target = hit_info.entity
-                self.gun.parent = scene
-                self.gun.position = target.position + Vec3(0, 8, 0)
-
-                # Aplicar gravedad a la botella
-                self.gun.velocity_y = 0  # Inicializar la velocidad vertical
-                self.gun.apply_gravity = True  # Indicador para aplicar gravedad
-            else:
-                # Soltar el objeto normalmente
-                self.gun.parent = scene
-                self.gun.position = camera.world_position + camera.forward * 4
-
-                # Aplicar gravedad al objeto soltado
-                self.gun.velocity_y = 0  # Inicializar la velocidad vertical
-                self.gun.apply_gravity = True  # Indicador para aplicar gravedad
-
-            self.gun = None
 
 class TrashCan(Entity):
     pass
 
-class Recolectable(Button):
-    global player
-    def __init__(self,**kwargs):
-        super().__init__(**kwargs)
-    def get_recolectable(self):
-        if player.gun is None:
-            self.parent = camera
-            self.position = Vec3(0, 0, 3)
-            player.gun = self
-            
 
 # Crear el jugador
 player = Dron()
 player.position = (0, 10, 0)
-
 # Crear el suelo
 ground = Entity(
     model='plane',
@@ -78,38 +23,21 @@ ground = Entity(
     scale=(50, 1, 50)
 )
 
-# Crear una plataforma
-platform = Entity(
-    model='cube',
-    color=color.orange,
-    collider='box',
-    position=(0, 1, 5),
-    scale=(5, .1, 5)
-)
-
-# Crear un obstáculo
-obstacle = Entity(
-    model='./modelos_graficos/yogurt.obj',
-    texture="brick",
-    color=color.blue,
-    collider='box',
-    position=(0, 5, 5),
-    scale=0.3
-)
 
 # Crear recolectables
 recolectable_bottle = Recolectable(
+    player,
     parent=scene,
-    model='./modelos_graficos/yogurt.obj',
-    color=color.blue,
+    model='./modelos_graficos/can.obj',
     origin_y=-.5,
-    position=(3, 0, 3),
+    position=(3, .9, 3),
     collider='box',
-    scale=(.2, .2, .2)
+    scale=(.13, .13, .13)
     
 )
 
 recolectable_bottle_2 = Recolectable(
+    player,
     parent=scene,
     model='./modelos_graficos/yogurt.obj',
     color=color.red,
@@ -121,11 +49,9 @@ recolectable_bottle_2 = Recolectable(
 
 recolectable_bottle.on_click = recolectable_bottle.get_recolectable
 recolectable_bottle_2.on_click = recolectable_bottle_2.get_recolectable
+colectibles = TrashGenerator.generate_trash(player)
 
-# Crear un cielo
 sky = Sky()
-
-# Función para aplicar gravedad a los objetos soltados
 def apply_gravity():
     for entity in scene.entities:
         if hasattr(entity, 'apply_gravity') and entity.apply_gravity:
