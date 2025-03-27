@@ -6,6 +6,7 @@ class Recolectable(Button):
         super().__init__(**kwargs)
         self.disabled = False
         self.player = player
+        self.on_click = self.get_recolectable
     def get_recolectable(self):
         if self.player.gun is None:
             self.parent = camera

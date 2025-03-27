@@ -69,7 +69,6 @@ class TrashGenerator:
                         origin_y=-.5,
                         scale=scale
                         )
-                    collectible.on_click = collectible.get_recolectable
                 elif trash_selected == "can":
                     flyweightcan = CansFactory.get_can(
                         model='./modelos_graficos/can.obj',
@@ -88,7 +87,6 @@ class TrashGenerator:
                         origin_y=-.5,
                         scale=scale
                         )
-                    collectible.on_click = collectible.get_recolectable
         except Exception as e:
             print(f"Error {e}")
             

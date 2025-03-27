@@ -4,7 +4,7 @@ import random
 from flyweight import *
 from recolectable import *
 from dron import *
-
+from utilities import *
 simulation = Ursina()
 def singleton(cls):
     instances = {}
@@ -50,30 +50,19 @@ recolectable_bottle_2 = Recolectable(
     collider='box',
     scale=(.2, .2, .2)
 )
-recolectable_bottle.on_click = recolectable_bottle.get_recolectable
-recolectable_bottle_2.on_click = recolectable_bottle_2.get_recolectable
 colectibles = TrashGenerator.generate_trash(player)
 trashcan = TrashCan(
     model="./modelos_graficos/trash_can.obj",
     texture="./modelos_graficos/trash_can_texture.png",
-    collider="mesh",
-    position=(0,2.5,0),
+    collider="box",
+    position=(0,3,0),
     scale=5
 )
 sky = Sky()
-def apply_gravity():
-    for entity in scene.entities:
-        if hasattr(entity, 'apply_gravity') and entity.apply_gravity:
-            if not entity.intersects().hit:
-                entity.velocity_y -= 9.81 * time.dt  
-                entity.y += entity.velocity_y * time.dt  
-            else:
-                
-                entity.velocity_y = 0
-                entity.apply_gravity = False
+
 
 def update():
     apply_gravity()
-
+    verificate_collition_with_trash_can(trashcan,player)
 simulation.run()
 
