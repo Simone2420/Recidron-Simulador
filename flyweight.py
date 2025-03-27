@@ -46,12 +46,12 @@ class CansFactory:
 
 class TrashGenerator:
     @classmethod
-    def generate_trash(cls,player,num_colectibles=10):
+    def generate_trash(cls,player,num_colectibles=20):
         try:
             trash_types = ["botlle","can"]
             for _ in range(num_colectibles):
                 trash_selected = random.choice(trash_types)
-                x,z = random_excluding(-20,20,-5,5),random_excluding(-20,20,-5,5)
+                x,z = random_excluding(-22,22,-5,5),random_excluding(-22,22,-5,5)
                 if trash_selected == "botlle":
                     flyweightbottle = BottlesFactory.get_bottle(
                         model='./modelos_graficos/yogurt.obj',
@@ -82,6 +82,8 @@ class TrashGenerator:
                         position= (x,1,z),
                         model= flyweightcan.model,
                         collider=flyweightcan.collider,
+                        color=color.gray,
+                        texture="./modelos_graficos/metal3.png",
                         parent=scene,
                         origin_y=-.5,
                         scale=scale
