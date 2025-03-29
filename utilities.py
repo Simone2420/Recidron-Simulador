@@ -6,7 +6,6 @@ def apply_gravity():
                 entity.velocity_y -= 9.81 * time.dt  
                 entity.y += entity.velocity_y * time.dt  
             else:
-                
                 entity.velocity_y = 0
                 entity.apply_gravity = False
 def desintegrate(entity):

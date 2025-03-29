@@ -71,18 +71,18 @@ class TrashGenerator:
                         )
                 elif trash_selected == "can":
                     flyweightcan = CansFactory.get_can(
-                        model='./modelos_graficos/can.obj',
+                        model='./modelos_graficos/can7.obj',
                         collider='box',
-                        color=color.random_color()
+                        color=color.red
                     )
-                    scale = (.13,.13,.13)
+                    scale = 3
                     collectible = Recolectable(
                         player,
-                        position= (x,1,z),
+                        position= (x,.02,z),
                         model= flyweightcan.model,
+                        texture="./modelos_graficos/metal2.png",
+                        color=flyweightcan.color,
                         collider=flyweightcan.collider,
-                        color=color.gray,
-                        texture="./modelos_graficos/metal3.png",
                         parent=scene,
                         origin_y=-.5,
                         scale=scale
