@@ -5,9 +5,6 @@ import random
 import random
 
 def random_excluding(low, high, exclude_low, exclude_high):
-    """
-    Genera un número aleatorio en el rango [low, high], excluyendo el rango [exclude_low, exclude_high].
-    """
     while True:
         num = random.randint(low, high)
         if not (exclude_low <= num <= exclude_high):

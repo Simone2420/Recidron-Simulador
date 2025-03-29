@@ -7,6 +7,8 @@ class Recolectable(Button):
         self.disabled = False
         self.player = player
         self.on_click = self.get_recolectable
+        self.weight = 1
+        self.type = "No especified"
     def get_recolectable(self):
         if self.player.gun is None:
             self.parent = camera
