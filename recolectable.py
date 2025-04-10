@@ -2,13 +2,17 @@ from ursina import *
 from dron import *
 
 class Recolectable(Button):
-    def __init__(self,player,**kwargs):
+    def __init__(self, player, **kwargs):
         super().__init__(**kwargs)
         self.disabled = False
         self.player = player
         self.on_click = self.get_recolectable
         self.weight = 1
-        self.type = "No especified"
+        self.object_type = "Not specified"
+        self.date_registered = None
+        self.assigned_zone = 1
+        self.initial_position = self.position
+
     def get_recolectable(self):
         if self.player.gun is None:
             self.parent = camera
