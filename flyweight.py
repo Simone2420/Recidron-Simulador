@@ -23,7 +23,18 @@ class FlyWeightBottle(EspecificTrash):
 class FlyWeightCan(EspecificTrash):
     def __init__(self, model=None, collider=None, color=None):
         super().__init__(model, collider, color)
-
+class FlyweightPlasticGlass(EspecificTrash):
+    def __init__(self, model=None, collider=None, color=None):
+        super().__init__(model, collider, color)
+class FlyweighCorrugatedPaper(EspecificTrash):
+    def __init__(self, model=None, collider=None, color=None):
+        super().__init__(model, collider, color) 
+class StyrofoamTray(EspecificTrash):
+    def __init__(self, model=None, collider=None, color=None):
+        super().__init__(model, collider, color)
+class StyrofoamCan(EspecificTrash):
+    def __init__(self, model=None, collider=None, color=None):
+        super().__init__(model, collider, color)
 class BottlesFactory:
     _bottles = {}
     @classmethod
@@ -40,7 +51,38 @@ class CansFactory:
         if key not in cls._cans:
             cls._cans[key] = FlyWeightCan(model, collider, color)
         return cls._cans[key]
-
+class PlasticGlassFactory:
+    _plastic_glass = {}
+    @classmethod
+    def get_plastic_glass(cls, model, collider, color):
+        key = (model, collider, color)
+        if key not in cls._plastic_glass:
+            cls._plastic_glass[key] = FlyweightPlasticGlass(model, collider, color)
+        return cls._plastic_glass[key]
+class CorrugatedPaperFactory:
+    _corrugated_paper = {}
+    @classmethod
+    def get_corrugated_paper(cls, model, collider, color):
+        key = (model, collider, color)
+        if key not in cls._corrugated_paper:
+            cls._corrugated_paper[key] = FlyweighCorrugatedPaper(model, collider, color)
+        return cls._corrugated_paper[key]
+class StyrofoamTrayFactory:
+    _styrofoam_tray = {}
+    @classmethod
+    def get_styrofoam_tray(cls, model, collider, color):
+        key = (model, collider, color)
+        if key not in cls._styrofoam_tray:
+            cls._styrofoam_tray[key] = StyrofoamTray(model, collider, color)
+        return cls._styrofoam_tray[key]
+class StyrofoamCanFactory:
+    _styrofoam_can = {}
+    @classmethod
+    def get_styrofoam_can(cls, model, collider, color):
+        key = (model, collider, color)
+        if key not in cls._styrofoam_can:
+            cls._styrofoam_can[key] = StyrofoamCan(model, collider, color)
+        return cls._styrofoam_can[key]
 class TrashGenerator:
     @classmethod
     def generate_trash(cls,player,num_colectibles=20):

@@ -31,7 +31,7 @@ ground = Entity(
     model='plane',
     texture='grass',
     collider='box',
-    scale=(50, 1, 50)
+    scale=(100, 1, 100)
 )
 invisible_ground = Entity(
     model="cube",
