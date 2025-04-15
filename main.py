@@ -15,7 +15,7 @@ def singleton(cls):
     return get_instance
 cube = Entity(
     model="cube",
-    position = (5,1,6),
+    position = (40,1,-40),
     collider = "box",
     scale=1
 )
@@ -37,7 +37,7 @@ invisible_ground = Entity(
     model="cube",
     collider="box",
     position=(0,.1,0),
-    scale=(50,.1,50),
+    scale=(100,.1,100),
     visible=False
 )
 recolectable_bottle = Recolectable(

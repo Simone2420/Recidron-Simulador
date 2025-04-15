@@ -85,12 +85,12 @@ class StyrofoamCanFactory:
         return cls._styrofoam_can[key]
 class TrashGenerator:
     @classmethod
-    def generate_trash(cls,player,num_colectibles=20):
+    def generate_trash(cls,player,num_colectibles=50):
         try:
             trash_types = ["botlle","can"]
             for _ in range(num_colectibles):
                 trash_selected = random.choice(trash_types)
-                x,z = random_excluding(-22,22,-5,5),random_excluding(-22,22,-5,5)
+                x,z = random_excluding(-48,48,-5,5),random_excluding(-48,48,-5,5)
                 if trash_selected == "botlle":
                     flyweightbottle = BottlesFactory.get_bottle(
                         model='./assets/yogurt.obj',

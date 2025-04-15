@@ -18,6 +18,7 @@ def desintegrate(entity):
     if isinstance(entity, Recolectable) and not entity.position_printed:
         print("¡Un objeto ha sido reciclado!")
         print(f"The initial position of the object is {entity.initial_position}")
+        print(f"The asigned zone for the object is {entity.assigned_zone}")
         entity.position_printed = True
     destroy(entity, delay=1)
 def verificate_collition_with_trash_can(trash_can,player):
