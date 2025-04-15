@@ -20,7 +20,6 @@ cube = Entity(
     scale=1
 )
 class TrashCan(Entity):
-    @singleton
     def __init__(self,**kwargs):
         super().__init__(**kwargs)
 
@@ -76,7 +75,6 @@ sky = Sky()
 
     
 def update():
-    previous_position = player.position
     apply_gravity()
     verificate_collition_with_trash_can(trashcan,player)
 simulation.run()
