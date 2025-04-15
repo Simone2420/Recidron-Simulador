@@ -93,7 +93,7 @@ class TrashGenerator:
                 x,z = random_excluding(-22,22,-5,5),random_excluding(-22,22,-5,5)
                 if trash_selected == "botlle":
                     flyweightbottle = BottlesFactory.get_bottle(
-                        model='./modelos_graficos/yogurt.obj',
+                        model='./assets/yogurt.obj',
                         collider='box',
                         color=color.random_color()
                     )
@@ -110,7 +110,7 @@ class TrashGenerator:
                         )
                 elif trash_selected == "can":
                     flyweightcan = CansFactory.get_can(
-                        model='./modelos_graficos/can7.obj',
+                        model='./assets/can7.obj',
                         collider='box',
                         color=color.red
                     )
@@ -119,7 +119,7 @@ class TrashGenerator:
                         player,
                         position= (x,.02,z),
                         model= flyweightcan.model,
-                        texture="./modelos_graficos/metal2.png",
+                        texture="./assets/metal2.png",
                         color=flyweightcan.color,
                         collider=flyweightcan.collider,
                         parent=scene,

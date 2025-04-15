@@ -43,9 +43,9 @@ invisible_ground = Entity(
 recolectable_bottle = Recolectable(
     player,
     parent=scene,
-    model='./modelos_graficos/can7.obj',
+    model='./assets/can7.obj',
     origin_y=-.5,
-    texture="./modelos_graficos/metal2.png",
+    texture="./assets/metal2.png",
     color=color.red,
     position=(3, .9, 3),
     collider='box',
@@ -56,7 +56,7 @@ recolectable_bottle = Recolectable(
 recolectable_bottle_2 = Recolectable(
     player,
     parent=scene,
-    model='./modelos_graficos/yogurt.obj',
+    model='./assets/yogurt.obj',
     color=color.red,
     origin_y=-.5,
     position=(10, 0, 4),
@@ -65,8 +65,8 @@ recolectable_bottle_2 = Recolectable(
 )
 colectibles = TrashGenerator.generate_trash(player)
 trashcan = TrashCan(
-    model="./modelos_graficos/trash_can.obj",
-    texture="./modelos_graficos/trash_can_texture.png",
+    model="./assets/trash_can.obj",
+    texture="./assets/trash_can_texture.png",
     collider="box",
     double_sided=True,
     position=(0,3,0),
