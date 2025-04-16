@@ -1,2 +1,2 @@
-from rxconfig import config
-from .main import main
+from .rxconfig import config
+from .simulator import *
