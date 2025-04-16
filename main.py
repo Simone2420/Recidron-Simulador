@@ -2,7 +2,6 @@ import os
 import platform
 import subprocess
 import sys
-import webbrowser
 from time import sleep
 
 def check_permissions():
@@ -72,11 +71,11 @@ def install_dependencies():
     pip_path = os.path.join(".venv", "Scripts" if platform.system() == "Windows" else "bin", "pip")
     subprocess.run([pip_path, "install", "-r", "requirements.txt"])
     print("Dependencias instaladas.")
-
+    
 def run_reflex_app():
     """Ejecuta la aplicación Reflex."""
     print("Iniciando la aplicación Reflex...")
-    subprocess.run(
+    subprocess.Popen(
         ["reflex", "run"],
     )
     

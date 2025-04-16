@@ -6,13 +6,7 @@ from recolectable import *
 from dron import *
 from utilities import *
 simulation = Ursina()
-def singleton(cls):
-    instances = {}
-    def get_instance(*args, **kwargs):
-        if cls not in instances:
-            instances[cls] = cls(*args, **kwargs)
-        return instances[cls]
-    return get_instance
+
 cube = Entity(
     model="cube",
     position = (40,1,-40),
