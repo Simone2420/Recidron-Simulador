@@ -4,6 +4,7 @@ import subprocess
 import sys
 from time import sleep
 
+
 def check_permissions():
     """Verifica que el usuario tenga permisos de escritura en el directorio actual."""
     current_dir = os.getcwd()
@@ -13,6 +14,7 @@ def check_permissions():
         sys.exit(1)
     print("Permisos de escritura verificados.")
 
+
 def create_hidden_virtualenv():
     """Crea un entorno virtual oculto (.venv) si no existe."""
     if not os.path.exists(".venv"):
@@ -21,6 +23,7 @@ def create_hidden_virtualenv():
         print("Entorno virtual oculto creado.")
     else:
         print("El entorno virtual oculto (.venv) ya existe.")
+
 
 def are_dependencies_installed():
     """Verifica si todas las dependencias en requirements.txt están instaladas."""
@@ -61,6 +64,7 @@ def are_dependencies_installed():
     print("Todas las dependencias están instaladas.")
     return True
 
+
 def install_dependencies():
     """Instala las dependencias desde requirements.txt si no están instaladas."""
     if are_dependencies_installed():
@@ -71,14 +75,15 @@ def install_dependencies():
     pip_path = os.path.join(".venv", "Scripts" if platform.system() == "Windows" else "bin", "pip")
     subprocess.run([pip_path, "install", "-r", "requirements.txt"])
     print("Dependencias instaladas.")
-    
+
+
 def run_reflex_app():
     """Ejecuta la aplicación Reflex."""
     print("Iniciando la aplicación Reflex...")
+    python_path = os.path.join(".venv", "Scripts" if platform.system() == "Windows" else "bin", "python")
     subprocess.Popen(
-        ["reflex", "run"],
+        [python_path, "-m", "reflex", "run"],
     )
-    
 
 
 def main():
@@ -96,7 +101,6 @@ def main():
         # Paso 3: Ejecutar la aplicación Reflex
         run_reflex_app()
 
-
     except KeyboardInterrupt:
         print("\nProceso interrumpido por el usuario.")
     except PermissionError as e:
@@ -106,6 +110,7 @@ def main():
         sys.exit(1)
     except Exception as e:
         print(f"Ocurrió un error: {e}")
+
 
 if __name__ == "__main__":
     main()
