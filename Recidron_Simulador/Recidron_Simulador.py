@@ -1,20 +1,28 @@
 """Welcome to Reflex! This file outlines the steps to create a basic app."""
 
 import reflex as rx
-
+from Recidron_Simulador.utilities import generate_random_color_hex
+from data_base import *
 from rxconfig import config
-
-
+from utilities import *
+import random
+db = DataBaseConnector()
+data = db.get_all_records()
+print(data)
+objects_types = db.get_objects_types()
+print(objects_types)
+total_weigth_of_object_type= calculate_concentration_by_object_type(random.choice(objects_types),db)
 class State(rx.State):
     """The app state."""
 
     ...
 
 def try_pie_chart() -> rx.Component:
+    print(generate_random_color_hex())
     return rx.recharts.pie_chart(
         rx.recharts.pie(
             data=[
-                {"name": "Group A", "value": 400, "fill": "#FF6B6B"},
+                {"name": "Group A", "value": 400, "fill": generate_random_color_hex()},
                 {"name": "Group B", "value": 300, "fill": "#4ECDC4"},
                 {"name": "Group C", "value": 300, "fill": "#45B7D1"},
                 {"name": "Group D", "value": 200, "fill": "#96CEB4"},

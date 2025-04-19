@@ -90,10 +90,43 @@ class DataBaseConnector:
         except Exception as e:
             print(f"Error al consultar los registros por material: {e}")
             return []
+    def get_records_by_object_type(self, object_type):
+        try:
+            if not isinstance(object_type, str):
+                raise ValueError("El tipo de objeto debe ser una cadena de texto")
+
+            object_type = object_type.strip().lower()
+            if not object_type:
+                raise ValueError("El tipo de objeto no puede estar vacío")
+
+            self.cursor.execute("SELECT * FROM register WHERE LOWER(object_type) = ?", (object_type,))
+            records = self.cursor.fetchall()
+
+            if not records:
+                print(f"No se encontraron registros para el tipo de objeto: {object_type}")
+            return records
+        except Exception as e:
+            print(f"Error al consultar los registros por tipo de objeto: {e}")
+            return []
     def close(self):
         if self.conn:
             self.conn.close()
-
+    def get_objects_types(self):
+        try:
+            self.cursor.execute("SELECT DISTINCT object_type FROM register")
+            object_types = self.cursor.fetchall()
+            return [object_type[0] for object_type in object_types]
+        except Exception as e:
+            print(f"Error al obtener los tipos de objetos: {e}")
+            return []
+    def get_objects_materials(self):
+        try:
+            self.cursor.execute("SELECT DISTINCT object_material FROM register")
+            object_materials = self.cursor.fetchall()
+            return [object_material[0] for object_material in object_materials]
+        except Exception as e:
+            print(f"Error al obtener los materiales de los objetos: {e}")
+            return []
 # Ejemplo de uso
 if __name__ == "__main__":
     db = DataBaseConnector()

@@ -76,13 +76,19 @@ def install_dependencies():
     subprocess.run([pip_path, "install", "-r", "requirements.txt"])
     print("Dependencias instaladas.")
 
-
+def run_simulator():
+    """Ejecuta el simulador."""
+    print("Iniciando el simulador...")
+    python_path = os.path.join(".venv", "Scripts" if platform.system() == "Windows" else "bin", "python")
+    subprocess.run(
+        [python_path, "simulator.py"],
+    )
 def run_reflex_app():
     """Ejecuta la aplicación Reflex."""
     print("Iniciando la aplicación Reflex...")
     python_path = os.path.join(".venv", "Scripts" if platform.system() == "Windows" else "bin", "python")
     subprocess.Popen(
-        [python_path, "-m", "reflex", "run"],
+        ["reflex", "run"],
     )
 
 
@@ -97,7 +103,7 @@ def main():
 
         # Paso 2: Instalar dependencias
         install_dependencies()
-
+        run_simulator()
         # Paso 3: Ejecutar la aplicación Reflex
         run_reflex_app()
 

@@ -45,3 +45,11 @@ def register_data_to_database(entity):
     weight = entity.weight
     assigned_zone = entity.assigned_zone
     data_base_register.register_object(date_register,object_type,object_material,weight,assigned_zone)
+def end_simulation(simulation):
+    try:
+        simulation.close()
+    except:
+        print("Simulation already closed")
+    finally:
+        print("Simulation closed")
+        raise KeyboardInterrupt
