@@ -16,11 +16,18 @@ def check_permissions():
 
 
 def create_hidden_virtualenv():
-    """Crea un entorno virtual oculto (.venv) si no existe."""
+    """Crea un entorno virtual oculto (.venv) si no existe y asegura que pip esté instalado."""
     if not os.path.exists(".venv"):
         print("Creando entorno virtual oculto (.venv)...")
         subprocess.run([sys.executable, "-m", "venv", ".venv"])
         print("Entorno virtual oculto creado.")
+        
+        # Asegurar que pip esté instalado y actualizado
+        python_path = os.path.join(".venv", "Scripts" if platform.system() == "Windows" else "bin", "python")
+        print("Instalando y actualizando pip...")
+        subprocess.run([python_path, "-m", "ensurepip", "--upgrade"])
+        subprocess.run([python_path, "-m", "pip", "install", "--upgrade", "pip"])
+        print("Pip instalado y actualizado.")
     else:
         print("El entorno virtual oculto (.venv) ya existe.")
 

@@ -1,7 +1,7 @@
 """Welcome to Reflex! This file outlines the steps to create a basic app."""
 
 import reflex as rx
-from Recidron_Simulador.utilities import generate_random_color_hex
+from Recidron_Simulador.utilities import *
 from data_base import *
 from rxconfig import config
 from utilities import *
@@ -12,6 +12,7 @@ print(data)
 objects_types = db.get_objects_types()
 print(objects_types)
 total_weigth_of_object_type= calculate_concentration_by_object_type(random.choice(objects_types),db)
+print(total_weigth_of_object_type)
 class State(rx.State):
     """The app state."""
 
