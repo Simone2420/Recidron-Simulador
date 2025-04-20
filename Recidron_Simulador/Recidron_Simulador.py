@@ -19,15 +19,19 @@ class State(rx.State):
     ...
 
 def try_pie_chart() -> rx.Component:
-    print(generate_random_color_hex())
+    db = DataBaseConnector()
+    object_types = db.get_objects_types()
+    data = [
+        {
+            "name": object_type,
+            "value": calculate_concentration_by_object_type(object_type, db),
+            "fill": generate_random_color_hex()
+        }
+        for object_type in object_types
+    ]
     return rx.recharts.pie_chart(
         rx.recharts.pie(
-            data=[
-                {"name": "Group A", "value": 400, "fill": generate_random_color_hex()},
-                {"name": "Group B", "value": 300, "fill": "#4ECDC4"},
-                {"name": "Group C", "value": 300, "fill": "#45B7D1"},
-                {"name": "Group D", "value": 200, "fill": "#96CEB4"},
-            ],
+            data=data,
             name_key="name",
             data_key="value",
             label=True,
