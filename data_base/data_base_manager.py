@@ -108,6 +108,24 @@ class DataBaseConnector:
         except Exception as e:
             print(f"Error al consultar los registros por tipo de objeto: {e}")
             return []
+    def get_records_by_asigined_area(self, asigned_area):
+        try:
+            if not isinstance(asigned_area, int):
+                raise ValueError("El área asignada debe ser un número entero")
+
+            asigned_area = int(asigned_area)
+            if asigned_area <= 0:
+                raise ValueError("El área asignada debe ser un número positivo")
+
+            self.cursor.execute("SELECT * FROM register WHERE asigned_zone =?", (asigned_area,))
+            records = self.cursor.fetchall()
+
+            if not records:
+                print(f"No se encontraron registros para el área asignada: {asigned_area}")
+            return records
+        except Exception as e:
+            print(f"Error al consultar los registros por área asignada: {e}")
+            return []
     def close(self):
         if self.conn:
             self.conn.close()
@@ -118,6 +136,14 @@ class DataBaseConnector:
             return [object_type[0] for object_type in object_types]
         except Exception as e:
             print(f"Error al obtener los tipos de objetos: {e}")
+            return []
+    def get_assined_area(self):
+        try:
+            self.cursor.execute("SELECT DISTINCT asigned_zone FROM register")
+            assined_areas = self.cursor.fetchall()
+            return [assined_area[0] for assined_area in assined_areas]
+        except Exception as e:
+            print(f"Error al obtener las áreas asignadas: {e}")
             return []
     def get_objects_materials(self):
         try:
