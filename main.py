@@ -90,12 +90,19 @@ def run_simulator():
     subprocess.run(
         [python_path, "simulator.py"],
     )
+
 def run_reflex_app():
     """Ejecuta la aplicación Reflex."""
     print("Iniciando la aplicación Reflex...")
-    python_path = os.path.join(".venv", "Scripts" if platform.system() == "Windows" else "bin", "python")
+    # Usar la ruta completa al ejecutable reflex dentro del entorno virtual
+    reflex_path = os.path.join(".venv", "Scripts", "reflex.exe" if platform.system() == "Windows" else "reflex")
+    if not os.path.exists(reflex_path):
+        print("No se encontró el ejecutable de Reflex en el entorno virtual.")
+        sys.exit(1)
+    
     subprocess.Popen(
-        ["reflex", "run"],
+        [reflex_path, "run"],
+        shell=True
     )
 
 
