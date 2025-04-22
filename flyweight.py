@@ -98,8 +98,8 @@ class TrashGenerator:
     def generate_trash(cls,player,num_colectibles=70):
         try:
             trash_types = [
-                "botlle",
-                "currugated_bottle",
+                "bottle",
+                "corrugated_bottle",
                 "plastic_cup",
                 "can",
                 "corrugated_paper",
@@ -125,7 +125,7 @@ class TrashGenerator:
                     case 4:
                         scale = 1.7
                         fixed_y =.06
-                if trash_selected == "botlle":
+                if trash_selected == "bottle":
                     flyweightbottle = BottlesFactory.get_bottle(
                         model='./assets/water_bottle.obj',
                         collider='box',
@@ -142,8 +142,8 @@ class TrashGenerator:
                         parent=scene,
                         scale=scale*0.6
                         )
-                elif trash_selected == "currugated_bottle":
-                    flyweightbottle = CorrugatedBottlesFactory.get_bottle(
+                elif trash_selected == "corrugated_bottle":
+                    corrugated_flyweightbottle = CorrugatedBottlesFactory.get_bottle(
                         model='./assets/corrugated_bottle.obj',
                         collider='box',
                         color=color.random_color()
@@ -151,9 +151,9 @@ class TrashGenerator:
                     collectible = Recolectable(
                         player,
                         position= (x,fixed_y,z),
-                        model= flyweightbottle.model,
-                        collider=flyweightbottle.collider,
-                        color=flyweightbottle.color,
+                        model= corrugated_flyweightbottle.model,
+                        collider=corrugated_flyweightbottle.collider,
+                        color=corrugated_flyweightbottle.color,
                         object_type=trash_selected,
                         weight=random_weight,
                         parent=scene,
@@ -202,7 +202,7 @@ class TrashGenerator:
                         color=color.random_color()
                     )
                     collectible = Recolectable(
-                        player,
+                        player, 
                         position= (x,fixed_y,z),
                         model= flyweightcorrugatedpaper.model,
                         collider=flyweightcorrugatedpaper.collider,

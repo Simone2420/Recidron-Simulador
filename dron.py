@@ -5,7 +5,7 @@ class Dron(FirstPersonController):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.vertical_speed = 5  # Velocidad de movimiento vertical
-        self.collider = BoxCollider(self, center=Vec3(0, 0, 0), size=Vec3(1, 1, 1))
+        self.collider = "box"
         self.gravity = 0.005
         self.gun = None
         self.traverse_target = scene
@@ -24,9 +24,8 @@ class Dron(FirstPersonController):
             + self.right * (held_keys['d'] - held_keys['a'])
             + self.up * (held_keys['up arrow'] - held_keys['down arrow'])  # Movimiento vertical
         ).normalized()
-
-        MAX_SPEED = 2  # Velocidad máxima permitida
-        move_amount = self.direction * min(self.speed, MAX_SPEED) * time.dt
+  # Velocidad máxima permitida
+        move_amount = self.direction  * time.dt
 
         # Verificar colisiones antes de moverse
         feet_ray = raycast(self.position + Vec3(0, 0.5, 0), self.direction, traverse_target=self.traverse_target, ignore=self.ignore_list, distance=0.5)
