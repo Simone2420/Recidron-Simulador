@@ -62,18 +62,46 @@ def try_pie_chart() -> rx.Component:
     )
     
 def pie_chart_2() -> rx.Component:
-    return rx.recharts.pie_chart(
-        rx.recharts.pie(
-            data=[
-                {"name": "Group A", "value": 400, "fill": "#FF6B6B"},
-                {"name": "Group B", "value": 300, "fill": "#4ECDC4"}, 
-            ],
-            name_key="name",
-            data_key="value",
-            label=True, 
+    db = DataBaseConnector()
+    object_types = db.get_objects_materials()
+    data = [
+        {
+            "name": object_type,
+            "value": calculate_concentration_by_material(object_type, db),
+            "fill": generate_random_color_hex()
+        }
+        for object_type in object_types
+    ]
+    return rx.hstack(
+        rx.recharts.pie_chart(
+            rx.recharts.pie(
+                data=data,
+                name_key="name",
+                data_key="value",
+                label=True,
+            ),
+            rx.recharts.graphing_tooltip(),
+            width="100%",
+            height=300,
         ),
-        width="100%",
-        height=300
+        rx.vstack(
+            *[
+                rx.hstack(
+                    rx.box(
+                        background_color=item["fill"],
+                        width="20px",
+                        height="20px",
+                        border_radius="sm",
+                    ),
+                    rx.text(f"{item['name']}: {item['value']} kg"),
+                    spacing="2",
+                )
+                for item in data
+            ],
+            spacing="2",
+            align_items="start",
+        ),
+        spacing="8",
     )
 def index() -> rx.Component:
     # Welcome Page (Index)
