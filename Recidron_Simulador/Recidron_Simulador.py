@@ -101,7 +101,7 @@ def pie_chart_2() -> rx.Component:
             spacing="2",
             align_items="start",
         ),
-        spacing="8",
+        spacing="2",
     )
 def table_1() -> rx.Component:
     with DataBaseConnector() as db:

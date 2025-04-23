@@ -2,7 +2,7 @@ from ursina import *
 from recolectable import Recolectable
 from data_base import DataBaseConnector
 import datetime
-data_base_register = DataBaseConnector()
+
 def apply_gravity():
     for entity in scene.entities:
         if hasattr(entity, 'apply_gravity') and entity.apply_gravity:
@@ -39,12 +39,13 @@ def reclycle(entity):
     print(f"The weight of the object is {entity.weight}")
     register_data_to_database(entity)
 def register_data_to_database(entity):
-    date_register = datetime.datetime.now()
-    object_type = entity.object_type
-    object_material = entity.object_material
-    weight = entity.weight
-    assigned_zone = entity.assigned_zone
-    data_base_register.register_object(date_register,object_type,object_material,weight,assigned_zone)
+    with DataBaseConnector() as data_base_register:
+        date_register = datetime.datetime.now()
+        object_type = entity.object_type
+        object_material = entity.object_material
+        weight = entity.weight
+        assigned_zone = entity.assigned_zone
+        data_base_register.register_object(date_register,object_type,object_material,weight,assigned_zone)
 def end_simulation(simulation):
     try:
         simulation.close()
