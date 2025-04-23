@@ -114,7 +114,8 @@ def table_1() -> rx.Component:
         }
         for area in assiged_area
     ]
-    return rx.recharts.bar_chart(
+    return rx.hstack(
+        rx.recharts.bar_chart(
         rx.recharts.bar(
             data_key="value",
             stroke=rx.color("accent", 9),
@@ -125,9 +126,23 @@ def table_1() -> rx.Component:
         data=data,
         width="100%",
         height=250,
+    ),
+    rx.vstack(
+        *[
+            rx.hstack(
+                rx.box(
+                    background_color=item["fill"],
+                    width="20px",
+                    height="20px",
+                    border_radius="sm",
+                ),
+                rx.text(f"{item['name']}: {item['value']} kg"),
+                spacing="2",
+            )
+            for item in data
+        ]
     )
-
-    
+    )
 def index() -> rx.Component:
     # Welcome Page (Index)
     return rx.container(
