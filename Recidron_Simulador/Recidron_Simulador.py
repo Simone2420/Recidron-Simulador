@@ -6,22 +6,22 @@ from data_base import *
 from rxconfig import config
 from utilities import *
 import random
-db = DataBaseConnector()
-data = db.get_all_records()
-print(data)
-objects_types = db.get_objects_types()
-print(objects_types)
-total_weigth_of_object_type= calculate_concentration_by_object_type(random.choice(objects_types),db)
-print(total_weigth_of_object_type)
+with DataBaseConnector() as db:
+    data = db.get_all_records()
+    print(data)
+    objects_types = db.get_objects_types()
+    print(objects_types)
+    total_weigth_of_object_type = calculate_concentration_by_object_type(random.choice(objects_types), db)
+    print(total_weigth_of_object_type)
 class State(rx.State):
     """The app state."""
 
     ...
 
 def try_pie_chart() -> rx.Component:
-    db = DataBaseConnector()
-    object_types = db.get_objects_types()
-    data = [
+    with DataBaseConnector() as db:
+        object_types = db.get_objects_types()
+        data = [
         {
             "name": object_type,
             "value": calculate_concentration_by_object_type(object_type, db),
@@ -62,9 +62,9 @@ def try_pie_chart() -> rx.Component:
     )
     
 def pie_chart_2() -> rx.Component:
-    db = DataBaseConnector()
-    object_types = db.get_objects_materials()
-    data = [
+    with DataBaseConnector() as db:
+        object_types = db.get_objects_materials()
+        data = [
         {
             "name": object_type,
             "value": calculate_concentration_by_material(object_type, db),
@@ -103,6 +103,31 @@ def pie_chart_2() -> rx.Component:
         ),
         spacing="8",
     )
+def table_1() -> rx.Component:
+    with DataBaseConnector() as db:
+        assiged_area = db.get_assined_area()
+        data = [
+        {
+            "name": area,
+            "value": calculate_concentration_assigned_area(area, db),
+            "fill": generate_random_color_hex()
+        }
+        for area in assiged_area
+    ]
+    return rx.recharts.bar_chart(
+        rx.recharts.bar(
+            data_key="value",
+            stroke=rx.color("accent", 9),
+            fill=rx.color("accent", 8),
+        ),
+        rx.recharts.x_axis(data_key="name"),
+        rx.recharts.y_axis(),
+        data=data,
+        width="100%",
+        height=250,
+    )
+
+    
 def index() -> rx.Component:
     # Welcome Page (Index)
     return rx.container(
@@ -117,6 +142,7 @@ def index() -> rx.Component:
         rx.vstack(
             try_pie_chart(),
             pie_chart_2(),
+            table_1(),
             rx.link(
                 rx.button("Recidron Simulation", color_scheme="green", variant="solid"),
                 href="https://reflex.dev/docs/getting-started/introduction/",

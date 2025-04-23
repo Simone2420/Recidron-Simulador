@@ -8,22 +8,32 @@ def singleton(cls):
             instances[cls] = cls(*args, **kwargs)
         return instances[cls]
     return get_instance
-@singleton
 class DataBaseConnector:
     def __init__(self, db_path='./data_base/reports_trash_recolected.db'):
         self.db_path = db_path
-        self.conn = None
-        self.cursor = None
-        self.connect()
-        self.create_table()
 
-    def connect(self):
-        """Establece la conexión con la base de datos"""
+    def __enter__(self):
+        self.conn = sqlite3.connect(self.db_path)
+        self.cursor = self.conn.cursor()
+        self.create_table()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if self.conn:
+            if exc_type is None:
+                self.conn.commit()
+            self.conn.close()
+
+    def execute_query(self, query, params=None):
+        """Ejecuta una consulta SQL de manera segura"""
         try:
-            self.conn = sqlite3.connect(self.db_path)
-            self.cursor = self.conn.cursor()
+            if params:
+                self.cursor.execute(query, params)
+            else:
+                self.cursor.execute(query)
+            return self.cursor
         except Exception as e:
-            print(f"Error al conectar con la base de datos: {e}")
+            print(f"Error al ejecutar la consulta: {e}")
 
     def create_table(self):
         """Crea la tabla register si no existe"""
@@ -45,21 +55,17 @@ class DataBaseConnector:
     def register_object(self, date, object_type, object_material, weight, asigned_zone):
         """Registra un objeto en la base de datos"""
         try:
-            # Validar que el peso sea un número positivo
             if not isinstance(weight, (int, float)) or weight <= 0:
                 raise ValueError("El peso debe ser un número positivo.")
             
-            # Validar que la zona asignada sea un entero
             if not isinstance(asigned_zone, int):
                 raise ValueError("La zona asignada debe ser un número entero.")
             
-            # Insertar los datos en la tabla
-            self.cursor.execute('''
+            query = '''
             INSERT INTO register (date_registered, object_type, object_material, weight, asigned_zone)
             VALUES (?, ?, ?, ?, ?)
-            ''', (date, object_type,object_material, weight, asigned_zone))
-            
-            self.conn.commit()
+            '''
+            self.execute_query(query, (date, object_type, object_material, weight, asigned_zone))
             print("Registro exitoso.")
         except Exception as e:
             print(f"Error al registrar el objeto: {e}")
@@ -67,8 +73,8 @@ class DataBaseConnector:
     def get_all_records(self):
         """Obtiene todos los registros de la tabla"""
         try:
-            self.cursor.execute("SELECT * FROM register")
-            return self.cursor.fetchall()
+            cursor = self.execute_query("SELECT * FROM register")
+            return cursor.fetchall()
         except Exception as e:
             print(f"Error al consultar los registros: {e}")
             return []
@@ -81,8 +87,8 @@ class DataBaseConnector:
             if not material:
                 raise ValueError("El material no puede estar vacío")
             
-            self.cursor.execute("SELECT * FROM register WHERE LOWER(object_material) = ?", (material,))
-            records = self.cursor.fetchall()
+            cursor = self.execute_query("SELECT * FROM register WHERE LOWER(object_material) = ?", (material,))
+            records = cursor.fetchall()
             
             if not records:
                 print(f"No se encontraron registros para el material: {material}")
@@ -99,8 +105,8 @@ class DataBaseConnector:
             if not object_type:
                 raise ValueError("El tipo de objeto no puede estar vacío")
 
-            self.cursor.execute("SELECT * FROM register WHERE LOWER(object_type) = ?", (object_type,))
-            records = self.cursor.fetchall()
+            cursor = self.execute_query("SELECT * FROM register WHERE LOWER(object_type) = ?", (object_type,))
+            records = cursor.fetchall()
 
             if not records:
                 print(f"No se encontraron registros para el tipo de objeto: {object_type}")
@@ -117,8 +123,8 @@ class DataBaseConnector:
             if asigned_area <= 0:
                 raise ValueError("El área asignada debe ser un número positivo")
 
-            self.cursor.execute("SELECT * FROM register WHERE asigned_zone =?", (asigned_area,))
-            records = self.cursor.fetchall()
+            cursor = self.execute_query("SELECT * FROM register WHERE asigned_zone =?", (asigned_area,))
+            records = cursor.fetchall()
 
             if not records:
                 print(f"No se encontraron registros para el área asignada: {asigned_area}")
@@ -131,24 +137,26 @@ class DataBaseConnector:
             self.conn.close()
     def get_objects_types(self):
         try:
-            self.cursor.execute("SELECT DISTINCT object_type FROM register")
-            object_types = self.cursor.fetchall()
+            cursor = self.execute_query("SELECT DISTINCT object_type FROM register")
+            object_types = cursor.fetchall()
             return [object_type[0] for object_type in object_types]
         except Exception as e:
             print(f"Error al obtener los tipos de objetos: {e}")
             return []
     def get_assined_area(self):
         try:
-            self.cursor.execute("SELECT DISTINCT asigned_zone FROM register")
-            assined_areas = self.cursor.fetchall()
-            return [assined_area[0] for assined_area in assined_areas]
+            cursor = self.execute_query("SELECT DISTINCT asigned_zone FROM register")
+            assined_areas = cursor.fetchall()
+            area = [assined_area[0] for assined_area in assined_areas]
+            area.sort()
+            return area
         except Exception as e:
             print(f"Error al obtener las áreas asignadas: {e}")
             return []
     def get_objects_materials(self):
         try:
-            self.cursor.execute("SELECT DISTINCT object_material FROM register")
-            object_materials = self.cursor.fetchall()
+            cursor = self.execute_query("SELECT DISTINCT object_material FROM register")
+            object_materials = cursor.fetchall()
             return [object_material[0] for object_material in object_materials]
         except Exception as e:
             print(f"Error al obtener los materiales de los objetos: {e}")
