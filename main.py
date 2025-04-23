@@ -100,15 +100,23 @@ def run_reflex_app():
         [reflex_path, "run"],
         shell=True
     )
+        if not os.path.exists(reflex_path):
+            print("No se encontró el ejecutable de Reflex en el entorno virtual.")
+            sys.exit(1)
     else:
-        
-        subprocess.Popen(
-            ["reflex", "run"],
-            shell=True
+        activate_script = os.path.join(".venv", "bin", "activate")
+        if not os.path.exists(activate_script):
+            print("No se encontró el script de activación del entorno virtual.")
+            sys.exit(1)
+            
+        activate_cmd = f"source {activate_script} && reflex run"
+        subprocess.run(
+            [activate_cmd],
+            shell=True,
+            executable="/bin/bash"
         )
-    if not os.path.exists(reflex_path):
-        print("No se encontró el ejecutable de Reflex en el entorno virtual.")
-        sys.exit(1)
+        
+    
     
     
 
