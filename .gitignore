@@ -4,7 +4,6 @@ assets/external/
 .web
 .states
 *.py[cod]
-*.db
 PGC 2.0.py
 PGC consultas.py
 PGC.py
