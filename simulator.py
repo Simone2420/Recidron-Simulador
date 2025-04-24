@@ -43,7 +43,9 @@ trashcan = TrashCan(
 )
 sky = Sky()
 
-    
+def input(key):
+    if key == "escape":
+        end_simulation(simulation)
 def update():
     apply_gravity()
     verificate_collition_with_trash_can(trashcan,player)
