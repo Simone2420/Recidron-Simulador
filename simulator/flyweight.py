@@ -1,7 +1,6 @@
 from ursina import *
-from recolectable import *
-from dron import *
-import random
+from .recolectable import *
+from .dron import *
 import random
 
 def random_excluding(low, high, exclude_low, exclude_high):

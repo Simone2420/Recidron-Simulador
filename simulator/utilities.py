@@ -1,5 +1,5 @@
 from ursina import *
-from recolectable import Recolectable
+from .recolectable import Recolectable
 from data_base import DataBaseConnector
 import datetime
 

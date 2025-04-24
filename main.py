@@ -6,42 +6,42 @@ from time import sleep
 
 
 def check_permissions():
-    """Verifica que el usuario tenga permisos de escritura en el directorio actual."""
+    """Verifies that the user has write permissions in the current directory."""
     current_dir = os.getcwd()
     if not os.access(current_dir, os.W_OK):
-        print(f"No tienes permisos de escritura en el directorio: {current_dir}")
-        print("Por favor, ejecuta el script en un directorio donde tengas permisos.")
+        print(f"You don't have write permissions in the directory: {current_dir}")
+        print("Please run the script in a directory where you have permissions.")
         sys.exit(1)
-    print("Permisos de escritura verificados.")
+    print("Write permissions verified.")
 
 
 def create_hidden_virtualenv():
-    """Crea un entorno virtual oculto (.venv) si no existe y asegura que pip esté instalado."""
+    """Creates a hidden virtual environment (.venv) if it doesn't exist and ensures pip is installed."""
     if not os.path.exists(".venv"):
-        print("Creando entorno virtual oculto (.venv)...")
+        print("Creating hidden virtual environment (.venv)...")
         subprocess.run([sys.executable, "-m", "venv", ".venv"])
-        print("Entorno virtual oculto creado.")
+        print("Hidden virtual environment created.")
         
-        # Asegurar que pip esté instalado y actualizado
+        # Ensure pip is installed and updated
         python_path = os.path.join(".venv", "Scripts" if platform.system() == "Windows" else "bin", "python")
-        print("Instalando y actualizando pip...")
+        print("Installing and updating pip...")
         subprocess.run([python_path, "-m", "ensurepip", "--upgrade"])
         subprocess.run([python_path, "-m", "pip", "install", "--upgrade", "pip"])
-        print("Pip instalado y actualizado.")
+        print("Pip installed and updated.")
     else:
-        print("El entorno virtual oculto (.venv) ya existe.")
+        print("Hidden virtual environment (.venv) already exists.")
 
 
 def are_dependencies_installed():
-    """Verifica si todas las dependencias en requirements.txt están instaladas."""
+    """Verifies if all dependencies in requirements.txt are installed."""
     if not os.path.exists("requirements.txt"):
-        print("No se encontró el archivo 'requirements.txt'.")
+        print("requirements.txt file not found.")
         sys.exit(1)
 
-    print("Verificando dependencias instaladas...")
+    print("Verifying installed dependencies...")
     pip_path = os.path.join(".venv", "Scripts" if platform.system() == "Windows" else "bin", "pip")
 
-    # Obtener las dependencias instaladas en el entorno virtual
+    # Get installed dependencies in virtual environment
     result = subprocess.run(
         [pip_path, "freeze"],
         stdout=subprocess.PIPE,
@@ -50,50 +50,50 @@ def are_dependencies_installed():
     )
     installed_packages = {line.split("==")[0].lower(): line.split("==")[1] for line in result.stdout.splitlines()}
 
-    # Leer las dependencias requeridas desde requirements.txt
+    # Read required dependencies from requirements.txt
     with open("requirements.txt", "r") as f:
         required_packages = {}
         for line in f:
             line = line.strip()
-            if line and not line.startswith("#"):  # Ignorar comentarios y líneas vacías
+            if line and not line.startswith("#"):  # Ignore comments and empty lines
                 package, version = line.split("==") if "==" in line else (line, None)
                 required_packages[package.lower()] = version
 
-    # Verificar si todas las dependencias requeridas están instaladas
+    # Verify if all required dependencies are installed
     for package, version in required_packages.items():
         if package not in installed_packages:
-            print(f"Falta la dependencia: {package}")
+            print(f"Missing dependency: {package}")
             return False
         if version and installed_packages[package] != version:
-            print(f"Versión incorrecta para {package}. Requerida: {version}, Instalada: {installed_packages[package]}")
+            print(f"Incorrect version for {package}. Required: {version}, Installed: {installed_packages[package]}")
             return False
 
-    print("Todas las dependencias están instaladas.")
+    print("All dependencies are installed.")
     return True
 
 
 def install_dependencies():
-    """Instala las dependencias desde requirements.txt si no están instaladas."""
+    """Installs dependencies from requirements.txt if not installed."""
     if are_dependencies_installed():
-        print("No es necesario instalar dependencias.")
+        print("No need to install dependencies.")
         return
 
-    print("Instalando dependencias desde requirements.txt...")
+    print("Installing dependencies from requirements.txt...")
     pip_path = os.path.join(".venv", "Scripts" if platform.system() == "Windows" else "bin", "pip")
     subprocess.run([pip_path, "install", "-r", "requirements.txt"])
-    print("Dependencias instaladas.")
+    print("Dependencies installed.")
 
 def run_simulator():
-    """Ejecuta el simulador."""
-    print("Iniciando el simulador...")
+    """Runs the simulator."""
+    print("Starting the simulator...")
     python_path = os.path.join(".venv", "Scripts" if platform.system() == "Windows" else "bin", "python")
     subprocess.run(
         [python_path, "simulator.py"],
     )
 
 def run_reflex_app():
-    """Ejecuta la aplicación Reflex."""
-    print("Iniciando la aplicación Reflex...")
+    """Runs the Reflex application."""
+    print("Starting the Reflex application...")
     if platform.system() == "Windows":
         reflex_path = os.path.join(".venv", "Scripts", "reflex.exe")
         subprocess.Popen(
@@ -101,12 +101,12 @@ def run_reflex_app():
         shell=True
     )
         if not os.path.exists(reflex_path):
-            print("No se encontró el ejecutable de Reflex en el entorno virtual.")
+            print("Reflex executable not found in virtual environment.")
             sys.exit(1)
     else:
         activate_script = os.path.join(".venv", "bin", "activate")
         if not os.path.exists(activate_script):
-            print("No se encontró el script de activación del entorno virtual.")
+            print("Virtual environment activation script not found.")
             sys.exit(1)
             
         activate_cmd = f"source {activate_script} && reflex run"
@@ -115,36 +115,25 @@ def run_reflex_app():
             shell=True,
             executable="/bin/bash"
         )
-        
-    
-    
-    
-
 
 def main():
-    """Función principal para automatizar el proceso."""
+    """Main function to automate the process."""
     try:
-        # Paso 0: Verificar permisos
         check_permissions()
-
-        # Paso 1: Crear entorno virtual oculto
         create_hidden_virtualenv()
-
-        # Paso 2: Instalar dependencias
         install_dependencies()
         run_simulator()
-        # Paso 3: Ejecutar la aplicación Reflex
         run_reflex_app()
 
     except KeyboardInterrupt:
-        print("\nProceso interrumpido por el usuario.")
+        print("\nProcess interrupted by user.")
     except PermissionError as e:
-        print("Error de permisos:")
+        print("Permission error:")
         print(e)
-        print("Por favor, asegúrate de tener permisos de escritura en el directorio actual.")
+        print("Please make sure you have write permissions in the current directory.")
         sys.exit(1)
     except Exception as e:
-        print(f"Ocurrió un error: {e}")
+        print(f"An error occurred: {e}")
 
 
 if __name__ == "__main__":

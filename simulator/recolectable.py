@@ -1,5 +1,5 @@
 from ursina import *
-from dron import *
+from .dron import *
 from data_base import *
 class Recolectable(Button):
     def __init__(self, player, object_type= "Not specified", object_material= "Not specified",weight=0,**kwargs):
@@ -25,7 +25,7 @@ class Recolectable(Button):
         elif self.initial_position[0] > 0 and self.initial_position[2] < 0:
             self.assigned_zone = 4
     def determine_material(self): 
-        if self.object_type in ["bottle","currugated_bottle","plastic_cup"]:
+        if self.object_type in ["bottle","corrugated_bottle","plastic_cup"]:
             self.object_material = "plastic"
         elif self.object_type == "can":
             self.object_material = "metal"
