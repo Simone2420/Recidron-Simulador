@@ -7,13 +7,7 @@ from Recidron_Simulador.stucture import *
 from data_base import *
 from rxconfig import config
 import random
-with DataBaseConnector() as db:
-    data = db.get_all_records()
-    print(data)
-    objects_types = db.get_objects_types()
-    print(objects_types)
-    total_weigth_of_object_type = calculate_concentration_by_object_type(random.choice(objects_types), db)
-    print(total_weigth_of_object_type)
+
 class State(rx.State):
     """The app state."""
 

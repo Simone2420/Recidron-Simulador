@@ -2,7 +2,7 @@ import reflex as rx
 from data_base import *
 from Recidron_Simulador.utilities import *
 from Recidron_Simulador.styles import *
-
+def title(mensaje): pass #add a navbar title
 def subtitle(mensaje):
     return rx.text(
         mensaje,
