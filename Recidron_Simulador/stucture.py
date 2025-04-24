@@ -53,6 +53,7 @@ def object_type_pie_chart() -> rx.Component:
             align_items="start",
         ),
         spacing="8",
+        margin="20px",
     )
     
 def material_pie_chart() -> rx.Component:
